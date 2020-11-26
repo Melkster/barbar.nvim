@@ -58,8 +58,9 @@ call bufferline#enable()
 command!                BarbarEnable           call bufferline#enable()
 command!                BarbarDisable          call bufferline#disable()
 
-command!          -bang BufferNext             call s:goto_buffer_relative(+1)
-command!          -bang BufferPrevious         call s:goto_buffer_relative(-1)
+" TODO: handle call to BufferNext/BufferPrevious without argument (currently it crashes)
+command! -nargs=? -count=1  -bang BufferNext     call s:goto_buffer_relative(+1, <args>)
+command! -nargs=? -count=-1 -bang BufferPrevious call s:goto_buffer_relative(-1, -<args>)
 
 command! -nargs=1 -bang BufferGoto             call s:goto_buffer(<f-args>)
 command!          -bang BufferLast             call s:goto_buffer(-1)
@@ -119,7 +120,7 @@ let s:last_tabline = ''
 
 " Current buffers in tabline (ordered)
 let s:buffers = []
-let s:buffers_by_id = {} " Map<String, [nameWidth: Number, restOfWidth: Number]> 
+let s:buffers_by_id = {} " Map<String, [nameWidth: Number, restOfWidth: Number]>
 
 " Last current buffer number
 let s:last_current_buffer = v:null
@@ -239,18 +240,22 @@ endfunction
 
 " Buffer movement
 
-function! s:move_current_buffer (direction)
+function! s:move_current_buffer(direction)
    call luaeval("require'bufferline.state'.move_current_buffer(_A)", a:direction)
 endfunc
 
-function! s:goto_buffer (number)
+function! s:goto_buffer(number)
    call luaeval("require'bufferline.state'.goto_buffer(_A)", a:number)
 endfunc
 
-function! s:goto_buffer_relative (direction)
-   call luaeval("require'bufferline.state'.goto_buffer_relative(_A)", a:direction)
+function! s:goto_buffer_relative(default_direction, ...)
+   if (exists('a:1'))
+      echom a:1
+      call luaeval("require'bufferline.state'.goto_buffer_relative(_A)", a:1)
+   else
+      call luaeval("require'bufferline.state'.goto_buffer_relative(_A)", a:default_direction)
+   endif
 endfunc
-
 
 " Final setup
 

@@ -316,7 +316,7 @@ local function goto_buffer (number)
   nvim.command('silent buffer ' .. m.buffers[idx])
 end
 
-local function goto_buffer_relative (direction)
+local function goto_buffer_relative(steps)
   m.get_updated_buffers()
 
   local currentnr = vim.fn.bufnr('%')
@@ -325,12 +325,12 @@ local function goto_buffer_relative (direction)
   if idx == nil then
     print("Couldn't find buffer " .. currentnr .. " in the list: " .. vim.inspect(state.buffers))
     return
-  elseif idx == 1 and direction == -1 then
-    idx = len(m.buffers)
-  elseif idx == len(m.buffers) and direction == 1 then
-    idx = 1
+  elseif idx == 1 and steps < 0 then
+    idx = len(m.buffers) - steps + 1
+  elseif idx == len(m.buffers) and steps > 0 then
+    idx = steps
   else
-    idx = idx + direction
+    idx = (idx + steps - 1) % len(m.buffers) + 1 -- Lua is indexed from 1
   end
 
   nvim.command('silent buffer ' .. m.buffers[idx])
