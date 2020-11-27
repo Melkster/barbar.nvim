@@ -58,9 +58,8 @@ call bufferline#enable()
 command!                BarbarEnable           call bufferline#enable()
 command!                BarbarDisable          call bufferline#disable()
 
-" TODO: handle call to BufferNext/BufferPrevious without argument (currently it crashes)
-command! -nargs=? -count=1  -bang BufferNext     call s:goto_buffer_relative(+1, <args>)
-command! -nargs=? -count=-1 -bang BufferPrevious call s:goto_buffer_relative(-1, -<args>)
+command! -count   -bang BufferNext            call s:goto_buffer_relative(v:count1)
+command! -count   -bang BufferPrevious        call s:goto_buffer_relative(-v:count1)
 
 command! -nargs=1 -bang BufferGoto             call s:goto_buffer(<f-args>)
 command!          -bang BufferLast             call s:goto_buffer(-1)
@@ -248,13 +247,8 @@ function! s:goto_buffer(number)
    call luaeval("require'bufferline.state'.goto_buffer(_A)", a:number)
 endfunc
 
-function! s:goto_buffer_relative(default_direction, ...)
-   if (exists('a:1'))
-      echom a:1
-      call luaeval("require'bufferline.state'.goto_buffer_relative(_A)", a:1)
-   else
-      call luaeval("require'bufferline.state'.goto_buffer_relative(_A)", a:default_direction)
-   endif
+function! s:goto_buffer_relative(steps)
+   call luaeval("require'bufferline.state'.goto_buffer_relative(_A)", a:steps)
 endfunc
 
 " Final setup

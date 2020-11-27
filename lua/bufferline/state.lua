@@ -326,7 +326,7 @@ local function goto_buffer_relative(steps)
     print("Couldn't find buffer " .. currentnr .. " in the list: " .. vim.inspect(state.buffers))
     return
   elseif idx == 1 and steps < 0 then
-    idx = len(m.buffers) - steps + 1
+    idx = len(m.buffers) + steps + 1
   elseif idx == len(m.buffers) and steps > 0 then
     idx = steps
   else
