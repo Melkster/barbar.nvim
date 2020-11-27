@@ -325,10 +325,6 @@ local function goto_buffer_relative(steps)
   if idx == nil then
     print("Couldn't find buffer " .. currentnr .. " in the list: " .. vim.inspect(state.buffers))
     return
-  elseif idx == 1 and steps < 0 then
-    idx = len(m.buffers) + steps + 1
-  elseif idx == len(m.buffers) and steps > 0 then
-    idx = steps
   else
     idx = (idx + steps - 1) % len(m.buffers) + 1 -- Lua is indexed from 1
   end

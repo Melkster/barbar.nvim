@@ -58,8 +58,8 @@ call bufferline#enable()
 command!                BarbarEnable           call bufferline#enable()
 command!                BarbarDisable          call bufferline#disable()
 
-command! -count   -bang BufferNext            call s:goto_buffer_relative(v:count1)
-command! -count   -bang BufferPrevious        call s:goto_buffer_relative(-v:count1)
+command! -count   -bang BufferNext             call s:goto_buffer_relative(v:count1)
+command! -count   -bang BufferPrevious         call s:goto_buffer_relative(-v:count1)
 
 command! -nargs=1 -bang BufferGoto             call s:goto_buffer(<f-args>)
 command!          -bang BufferLast             call s:goto_buffer(-1)
